@@ -117,17 +117,20 @@ class Script(scripts.Script):
   def ui(self, is_img2img):
     # NOTE: Changing the contents of `ctrls` means the XY Grid support may need
     # to be updated, see end of file
+    is_enabled = False
     ctrls = []
+    toggleable = []
     model_dropdowns = []
     self.infotext_fields = []
     with gr.Group():
       with gr.Accordion('Additional Networks', open=False):
-        enabled = gr.Checkbox(label='Enable', value=False)
+        enabled = gr.Checkbox(label='Enable', value=is_enabled)
         ctrls.append(enabled)
         self.infotext_fields.append((enabled, "AddNet Enabled"))
 
         for i in range(MAX_MODEL_COUNT):
-          with gr.Row():
+          with gr.Row(visible=is_enabled) as r:
+            toggleable.append(r)
             module = gr.Dropdown(["LoRA"], label=f"Network module {i+1}", value="LoRA")
             model = gr.Dropdown(list(lora_models.keys()),
                                 label=f"Model {i+1}",
@@ -155,9 +158,18 @@ class Script(scripts.Script):
             updates.append(update)
           return updates
 
-        refresh_models = gr.Button(value='Refresh models')
+        refresh_models = gr.Button(value='Refresh models', visible=is_enabled)
         refresh_models.click(refresh_all_models, inputs=model_dropdowns, outputs=model_dropdowns)
+        toggleable.append(refresh_models)
         ctrls.append(refresh_models)
+
+        def refresh_rows_visibility(enabled):
+          print("hitupdate")
+          updates = [gr.Row.update(visible=enabled)] * MAX_MODEL_COUNT
+          updates.append(gr.Button.update(visible=enabled))
+          return updates
+
+        enabled.change(refresh_rows_visibility, inputs=[enabled], outputs=toggleable)
 
     return ctrls
 
@@ -350,7 +362,7 @@ def apply_model(p, x, xs, i):
 
 def apply_weight(p, x, xs, i):
     update_script_args(p, True, 0)
-    update_script_args(p, x, 3 + 3 * i) # enabled, (module, model, {weight), ...
+    update_script_args(p, x, 3 + 3 * i) # enabled, (module, model, {weight}), ...
 
 
 LORA_METADATA_NAMES = {
@@ -432,6 +444,9 @@ def on_ui_settings():
 
 
 def on_infotext_pasted(infotext, params):
+    if "AddNet Enabled" not in params:
+        params["AddNet Enabled"] = "False"
+
     for i in range(MAX_MODEL_COUNT):
         if f"AddNet Module {i+1}" not in params:
             params[f"AddNet Module {i+1}"] = "LoRA"
