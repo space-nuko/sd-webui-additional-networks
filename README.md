@@ -67,6 +67,8 @@ The metadata of the model can be drawn as legends. Move to ``Settings`` tab, sel
 
 ## Metadata Editor
 
+<screenshot here>
+
 Using this extension, you can view and add user metadata to models in `.safetensors` format, for example to keep track of important keywords, READMEs and other useful training information. To do this, switch to the `Additional Networks` tab and click the refresh button to get the list of models.
 
 Select a model from the list to view its metadata. To edit it, check `Enable Editing` near the bottom of the page and fill in the details of the model you wish to edit. You can provide an optional cover image by dragging and dropping it onto the image widget on the page. This image will be embedded in the model file and also saved as a webui-compatible preview image.
