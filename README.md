@@ -65,6 +65,16 @@ The metadata of the model can be drawn as legends. Move to ``Settings`` tab, sel
 
 ![image](https://user-images.githubusercontent.com/52813779/212443781-1f4c442e-c2f3-47f8-b698-25fbe981f633.png)
 
+## Metadata Editor
+
+Using this extension, you can view and add user metadata to models in `.safetensors` format, for example to keep track of important keywords, READMEs and other useful training information. To do this, switch to the `Additional Networks` tab and click the refresh button to get the list of models.
+
+Select a model from the list to view its metadata. To edit it, check `Enable Editing` near the bottom of the page and fill in the details of the model you wish to edit. You can provide an optional cover image by dragging and dropping it onto the image widget on the page. This image will be embedded in the model file and also saved as a webui-compatible preview image.
+ 
+When finished, click `Save Metadata`. By default, a backup of the model file will be created before saving if it doesn't exist yet. (You can disable this feature in the settings menu.)
+
+If you have several models from the same session with different epochs in a subfolder, you can use the `Copy metadata to other models in directory` feature to the left to duplicate the current model's metadata to the other models. By default, only models from the same training session will be targeted. Uncheck the `Only copy to models with same session ID` checkbox to copy to all models in the same folder regardless of what session they came from. Note that session IDs are only recorded for models trained with a recent version of sd-scripts (after [this commit](https://github.com/kohya-ss/sd-scripts/commit/7dbcef745a822b64b0407e193985e7ba96c8de0e)), so for older models you may have to uncheck this box for the feature to work.
+
 ## この Web UI 拡張について
 
 LoRA などのネットワークを元の Stable Diffusion に追加し、画像生成を行うための拡張です。現在は LoRA のみ対応しています。
